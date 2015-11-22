@@ -30,6 +30,7 @@ local boxes = {}
 local boxWeight
 local fixedRotation = true
 local box
+local drawModeBtnShape
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -41,6 +42,8 @@ function scene:create( event )
     crate2 = display.newImageRect( "assets/box2.png", 50, 50 )
     wall = display.newRect( _W+45, _H-200, 10, 100 )
     wall.alpha = 0
+    drawModeBtnShape = display.newRect( 0, 0, 100, 30)
+    drawModeBtnShape.alpha = 0
     gear = display.newImageRect("assets/gear.png", 20, 20)
     platform = display.newImageRect( "assets/platform.png", 200, 50 )
     
@@ -98,6 +101,8 @@ function scene:show( event )
         .. "\nSX: " .. crate.xScale .. "\nSY: " .. crate.yScale, _W-120, _H - 10, 70, 0, native.systemFont, 12, "left" )
     local crate2XY = display.newText( "[CRATE 2] \nX: " .. crate2.x .. "\nY: " .. crate2.y .."\nr: " .. crate2.rotation ..  "\nisFixed: " .. tostring(fixedRotation), _W-120, _H+80, 70, 0, native.systemFont, 12, "left" )
     
+    
+    
     physics.addBody( crate2, "dynamic", { friction=0.5, bounce=0.3 } )
     crate2.isFixedRotation = true
     physics.addBody( crate, "dynamic", { friction=0.5, bounce=0.3 } )
@@ -108,6 +113,7 @@ function scene:show( event )
     --physics.addBody( floor, "static", { friction=0.5, bounce=0.1 } )
     physics.addBody( rightWall, "static", { friction=0.5, bounce=0.3 } )
     physics.addBody( leftWall, "static", { friction=0.5, bounce=0.3 } )
+    physics.addBody( drawModeBtnShape, "static" )
     local pulleyJoint = physics.newJoint( "pulley", crate, crate2, crate.x+170, crate.y+18, crate2.x,
      crate2.y, crate.x, crate.y, crate2.x, crate2.y, 1.0 )
 
@@ -148,6 +154,7 @@ function scene:show( event )
             physics.setDrawMode( "debug" )
             drawMode.normal = "false"
             drawMode.debug = "true"
+            --[[
             timer.performWithDelay( 2500, 
                 function ()
                     physics.setDrawMode("hybrid")
@@ -156,7 +163,14 @@ function scene:show( event )
                     drawMode.hybrid = "true" 
                 end 
             )
-        elseif(drawMode.hybrid == "true") then
+            --]]
+            
+        elseif(drawMode.debug == "true" ) then
+        	physics.setDrawMode("hybrid")
+            button:setLabel("HYBRID")
+            drawMode.debug = "false"
+            drawMode.hybrid = "true" 
+        elseif(drawMode.hybrid == "true" ) then
             physics.setDrawMode( "normal" )
             button:setLabel("NORMAL")
             drawMode.hybrid = "false"
@@ -227,7 +241,10 @@ function scene:show( event )
         onRelease = btnListener
 
     }
-
+	
+	drawModeBtnShape.x = button.x
+	drawModeBtnShape.y = button.y
+	
 
     button3 = widget.newButton
     {
