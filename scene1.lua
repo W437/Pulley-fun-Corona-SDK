@@ -314,7 +314,6 @@ function scene:show( event )
     end
 
     local function getRotation( n )
-    	local cR
     	if( n == 1 ) then
         	if crate.rotation > 360 or crate.rotation < -360 then
             	crate.rotation = 0 
