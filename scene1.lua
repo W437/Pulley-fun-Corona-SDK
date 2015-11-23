@@ -124,8 +124,7 @@ function scene:show( event )
             print( "Slider at " .. event.value .. "%" )
             local crateScale = event.value 
             local cY, cX = crate.y, crate.x
-            crate.width = crateScale
-            crate.height = crateScale
+            crate.width, crate.height = crateScale
             physics.removeBody( crate )
             physics.addBody( crate, "dynamic", { friction=0.5, bounce=0.3 } )
             resetCrateCoordinates()
@@ -183,8 +182,8 @@ function scene:show( event )
             for i=1, #boxes, 1 do
                 print("removing " .. i)
                 boxes[i]:removeSelf()
-                print(i .. " removed")
                 boxes[i] = nil
+                print(i .. " removed")
             end
         end
     end
@@ -315,7 +314,6 @@ function scene:show( event )
     end
 
     local function getRotation( n )
-    	local cR
     	if( n == 1 ) then
         	if crate.rotation > 360 or crate.rotation < -360 then
             	crate.rotation = 0 
